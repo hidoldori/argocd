@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ci-cd-gitlab-devops
+  name: ci-cd-gitlab-devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ci-cd-gitlab-devops
+  template:
+    metadata:
+      labels:
+        app: ci-cd-gitlab-devops
+    spec:
+      containers:
+      - image: 266735809714.dkr.ecr.ap-northeast-2.amazonaws.com/kt-gosu/app/prod:v1.82
+
+        name: ci-cd-gitlab-devops
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          name: http

@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- namespace.yaml
+- deployment.yaml
+- service.yaml
+- ingress.yaml
+namespace: dev
+images:
+- name: 266735809714.dkr.ecr.ap-northeast-2.amazonaws.com/kt-gosu/app/prod
+  newTag: v1.82

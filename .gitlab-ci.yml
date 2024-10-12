@@ -1,0 +1,39 @@
+stages:
+- build
+- deploy-dev
+
+build:
+  variables:
+    APP_VERSION: ""
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.9.0-debug
+    entrypoint: [""]
+  before_script:
+    - cd app
+    - APP_VERSION=v$(grep -E -o "(version = )(.*)" release.txt | cut -d\" -f2)
+    - cd ..
+    - echo "BUILD_VERSION=$APP_VERSION" >> build.env
+    - cat build.env
+  script:
+    - echo "[Job] Docker build"
+    - mkdir -p /kaniko/.docker   
+    # ================
+    - echo "{\"credHelpers\":{\"266735809714.dkr.ecr.ap-northeast-2.amazonaws.com\":\"ecr-login\"}}" > /kaniko/.docker/config.json
+    - >-     
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "266735809714.dkr.ecr.ap-northeast-2.amazonaws.com/kt-gosu/app/prod:${APP_VERSION}"
+      #--customPlatform=linux/arm
+  artifacts:
+    reports:
+        dotenv: build.env
+  only: 
+    - main
+  
+deploy-dev:
+  #-- https://hi-dragon.tistory.com/253
+  
+
+  
